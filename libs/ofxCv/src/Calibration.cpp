@@ -203,7 +203,7 @@ namespace ofxCv {
 				}
 			}
 		}
-#ifdef USING_OPENCV_2_3
+#if CV_MAJOR_VERSION >= 2 && CV_MINOR_VERSION >= 3
 		else {
 			int flags = (patternType == CIRCLES_GRID ? CALIB_CB_SYMMETRIC_GRID : CALIB_CB_ASYMMETRIC_GRID); // + CALIB_CB_CLUSTERING
 			found = findCirclesGrid(img, patternSize, pointBuf, flags);
