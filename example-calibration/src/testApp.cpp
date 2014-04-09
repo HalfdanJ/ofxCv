@@ -11,7 +11,7 @@ void testApp::setup() {
 	ofSetVerticalSync(true);
     
 #ifdef LIVE
-	src.initGrabber(640, 480);
+	src.setup(1920, 1080, 30);
 #endif
     
 #ifdef MOVIE
@@ -34,9 +34,9 @@ void testApp::setup() {
 		calibration.setPatternType(patternType);
 	}
 	
-	imitate(undistorted, src);
-	imitate(previous, src);
-	imitate(diff, src);
+    undistorted.allocate(1920, 1080, OF_IMAGE_GRAYSCALE);
+	previous.allocate(1920, 1080, OF_IMAGE_GRAYSCALE);
+	diff.allocate(1920, 1080, OF_IMAGE_GRAYSCALE);
 	
 	lastTime = 0;
 	
@@ -44,9 +44,8 @@ void testApp::setup() {
 }
 
 void testApp::update() {
-	src.update();
-	if(src.isFrameNew()) {
-		Mat camMat = toCv(src);
+	if(src.update()) {
+		Mat camMat = toCv(src.getGrayPixels());
 		Mat prevMat = toCv(previous);
 		Mat diffMat = toCv(diff);
 		
@@ -69,7 +68,7 @@ void testApp::update() {
 		}
 		
 		if(calibration.size() > 0) {
-			calibration.undistort(toCv(src), toCv(undistorted));
+			calibration.undistort(toCv(src.getGrayPixels()), toCv(undistorted));
 			undistorted.update();
 		}
 	}
@@ -77,7 +76,7 @@ void testApp::update() {
 
 void testApp::draw() {
 	ofSetColor(255);
-	src.draw(0, 0, 640, 480);
+	src.getGrayTexture().draw(0, 0, 640, 480);
 	undistorted.draw(640, 0, 640, 480);
 	
 	stringstream intrinsics;

@@ -1,5 +1,5 @@
 %YAML:1.0
-xCount: 7
-yCount: 10
+xCount: 3
+yCount: 5  
 squareSize: 2.5
-patternType: 0
+patternType: 2

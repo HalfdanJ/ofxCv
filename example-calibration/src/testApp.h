@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxCv.h"
+#include "ofxBlackMagic.h"
 
 #define LIVE
 //#define MOVIE
@@ -14,7 +15,8 @@ public:
 	void keyPressed(int key);
 	
 #ifdef LIVE
-	ofVideoGrabber src;
+	//ofVideoGrabber src;
+    ofxBlackMagic src;
 #endif
     
 #ifdef MOVIE
