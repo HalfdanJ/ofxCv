@@ -9,7 +9,15 @@ const int startCleaning = 10; // start cleaning outliers after this many samples
 
 void testApp::setup() {
 	ofSetVerticalSync(true);
-	cam.initGrabber(640, 480);
+    
+#ifdef LIVE
+	src.initGrabber(640, 480);
+#endif
+    
+#ifdef MOVIE
+    src.loadMovie("calibration.mov");
+    src.play();
+#endif
 	
 	FileStorage settings(ofToDataPath("settings.yml"), FileStorage::READ);
 	if(settings.isOpened()) {
@@ -26,9 +34,9 @@ void testApp::setup() {
 		calibration.setPatternType(patternType);
 	}
 	
-	imitate(undistorted, cam);
-	imitate(previous, cam);
-	imitate(diff, cam);
+	imitate(undistorted, src);
+	imitate(previous, src);
+	imitate(diff, src);
 	
 	lastTime = 0;
 	
@@ -36,9 +44,9 @@ void testApp::setup() {
 }
 
 void testApp::update() {
-	cam.update();
-	if(cam.isFrameNew()) {		
-		Mat camMat = toCv(cam);
+	src.update();
+	if(src.isFrameNew()) {
+		Mat camMat = toCv(src);
 		Mat prevMat = toCv(previous);
 		Mat diffMat = toCv(diff);
 		
@@ -61,7 +69,7 @@ void testApp::update() {
 		}
 		
 		if(calibration.size() > 0) {
-			calibration.undistort(toCv(cam), toCv(undistorted));
+			calibration.undistort(toCv(src), toCv(undistorted));
 			undistorted.update();
 		}
 	}
@@ -69,8 +77,8 @@ void testApp::update() {
 
 void testApp::draw() {
 	ofSetColor(255);
-	cam.draw(0, 0);
-	undistorted.draw(640, 0);
+	src.draw(0, 0, 640, 480);
+	undistorted.draw(640, 0, 640, 480);
 	
 	stringstream intrinsics;
 	intrinsics << "fov: " << toOf(calibration.getDistortedIntrinsics().getFov()) << " distCoeffs: " << calibration.getDistCoeffs();

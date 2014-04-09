@@ -3,6 +3,9 @@
 #include "ofMain.h"
 #include "ofxCv.h"
 
+#define LIVE
+//#define MOVIE
+
 class testApp : public ofBaseApp {
 public:
 	void setup();
@@ -10,7 +13,14 @@ public:
 	void draw();
 	void keyPressed(int key);
 	
-	ofVideoGrabber cam;
+#ifdef LIVE
+	ofVideoGrabber src;
+#endif
+    
+#ifdef MOVIE
+    ofVideoPlayer src;
+#endif
+    
 	ofImage undistorted;
 	ofPixels previous;
 	ofPixels diff;
