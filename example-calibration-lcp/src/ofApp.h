@@ -11,7 +11,6 @@ public:
 	
 	ofImage distorted;
     ofImage undistorted;
-    ofImage undistortedReference;
 	
 	ofxCv::Calibration calibration;
 };
